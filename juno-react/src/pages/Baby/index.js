@@ -1,10 +1,10 @@
 import React from "react";
 import withWaitForCondition from '../../components/WaitForCondition/withWaitForCondition';
 
-const carModel = ("https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/TechnicLEGO_CAR_1.obj");
+const babyModel = ("https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby.obj");
 const carMaterial = ("https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/TechnicLEGO_CAR_1.mtl");
 
-class ThreeScene extends React.Component {
+class Baby extends React.Component {
   state = { loading: true };
 
   componentDidMount(){
@@ -13,18 +13,20 @@ class ThreeScene extends React.Component {
 
     //ADD SCENE
     this.scene = new window.THREE.Scene()
+    this.scene.background = new window.THREE.Color(0x111111);
 
     //ADD CAMERA
     this.camera = new window.THREE.PerspectiveCamera(
       45,
       width / height,
       1,
-      4000
-    )
-    this.camera.position.z = 2000;
+      1000
+    );
+    this.camera.position.set(0, 0, -50);
+    this.camera.zoom = 500;
 
     // Add lights
-    var ambientLight = new window.THREE.AmbientLight(0xcccccc, 1);
+    var ambientLight = new window.THREE.AmbientLight(0xcccccc, 0.8);
     this.scene.add(ambientLight);
 
     var pointLight = new window.THREE.PointLight(0xffffff, 1);
@@ -33,6 +35,7 @@ class ThreeScene extends React.Component {
 
     //ADD RENDERER
     this.renderer = new window.THREE.WebGLRenderer({ antialias: true })
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setClearColor('#fff')
     this.renderer.setSize(width, height)
     this.mount.appendChild(this.renderer.domElement)
@@ -45,7 +48,14 @@ class ThreeScene extends React.Component {
     mtlLoader.load(carMaterial, (material) => {
       material.preload();
       const loader = new window.THREE.OBJLoader();
-      loader.setMaterials(material).load(carModel, (object) => {
+      loader.setMaterials(material).load(babyModel, (object) => {
+        object.traverse(function(child) {
+          if (child instanceof window.THREE.Mesh) {
+            child.material.color = new window.THREE.Color(0xffb830);
+          }
+        });
+        object.position.set(0, 0, -53);
+
         this.object = object;
         this.scene.add(object);
         this.setState({ loading: false });
@@ -57,7 +67,9 @@ class ThreeScene extends React.Component {
   }
   componentWillUnmount() {
     this.stop()
-    this.mount.removeChild(this.renderer.domElement);
+    if (this.renderer) {
+      this.mount.removeChild(this.renderer.domElement);
+    }
   }
 
   // Use requestAnimationFrame to kick off the rendering
@@ -75,7 +87,7 @@ class ThreeScene extends React.Component {
   // Rotate and render
   animate = () => {
     if (this.object) {
-      this.object.rotation.y += 0.05;
+      this.object.rotation.y += 0.01;
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -96,8 +108,13 @@ class ThreeScene extends React.Component {
 }
 
 const WithWaitForCondition = withWaitForCondition(
-  () => 'THREE' in window && 'DDSLoader' in window.THREE && 'MTLLoader' in window.THREE && 'OBJLoader' in window.THREE,
+  () =>
+    'THREE' in window &&
+    'DDSLoader' in window.THREE &&
+    'MTLLoader' in window.THREE &&
+    'OBJLoader' in window.THREE &&
+    'GLTFLoader' in window.THREE,
   200,
-)(ThreeScene);
+)(Baby);
 
 export default WithWaitForCondition;
