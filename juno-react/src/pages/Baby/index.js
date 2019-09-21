@@ -42,7 +42,7 @@ class Baby extends React.Component {
 
     // Load stuff
     const mgr = new window.THREE.LoadingManager();
-    mgr.addHandler(/\.dds$/i, new window.THREE.DDSLoader());
+    // mgr.addHandler(/\.dds$/i, new window.THREE.DDSLoader());
 
     const mtlLoader = new window.THREE.MTLLoader();
     mtlLoader.load(carMaterial, (material) => {

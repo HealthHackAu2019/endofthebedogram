@@ -12,6 +12,7 @@ import cn from "classnames";
 import styles from "./styles.module.scss";
 import HomepageHeading from "./HomepageHeading";
 import NavBar from "../../components/NavBar";
+import {Link} from "react-router-dom";
 
 const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
   cluster: process.env.REACT_APP_PUSHER_CLUSTER,
@@ -45,6 +46,7 @@ function Home() {
             <Grid.Column width={8}>
               <Header as='h3' className={styles.header}>
                 We Help Companies and Companions
+                <Link to="/ar">AR Test</Link>
               </Header>
               <p className={styles.details}>
                 We can give your company superpowers to do things that they never thought possible.

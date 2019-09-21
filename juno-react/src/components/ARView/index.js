@@ -1,140 +1,161 @@
-import React, { useEffect } from "react";
-// import * as THREE from 'three';
+// @flow
 
-const a = () => {
-  //////////////////////////////////////////////////////////////////////////////////
-  //    Init
-  //////////////////////////////////////////////////////////////////////////////////
-  // init renderer
-  var renderer = new window.THREE.WebGLRenderer({
-    antialias: true,
-    alpha: true
-  });
-  renderer.setClearColor(new window.THREE.Color('lightgrey'), 0);
-  renderer.setSize(640, 480);
-  renderer.domElement.style.position = 'relative';
-  renderer.domElement.style.top = '0px';
-  renderer.domElement.style.left = '0px';
-  document.body.appendChild( renderer.domElement );
-  // array of functions for the rendering loop
-  var onRenderFcts= [];
-  // init scene and camera
-  var scene  = new window.THREE.Scene();
-  //////////////////////////////////////////////////////////////////////////////////
-  //    Initialize a basic camera
-  //////////////////////////////////////////////////////////////////////////////////
-  // Create a camera
-  var camera = new window.THREE.Camera();
-  scene.add(camera);
-  ////////////////////////////////////////////////////////////////////////////////
-  //          handle arToolkitSource
-  ////////////////////////////////////////////////////////////////////////////////
-  var arToolkitSource = new window.THREEx.ArToolkitSource({
-    // to read from the webcam
-    sourceType : 'webcam',
-    // // to read from an image
-    // sourceType : 'image',
-    // sourceUrl : window.THREEx.ArToolkitContext.baseURL + '../data/images/img.jpg',
-    // to read from a video
-    // sourceType : 'video',
-    // sourceUrl : window.THREEx.ArToolkitContext.baseURL + '../data/videos/headtracking.mp4',
-  })
-  arToolkitSource.init(function onReady(){
-    onResize()
-  })
-  // handle resize
-  window.addEventListener('resize', () => onResize());
-  function onResize(){
-    arToolkitSource.onResizeElement();
-    arToolkitSource.copyElementSizeTo(renderer.domElement);
-    if( arToolkitContext.arController !== null ){
-      arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)
-    }
-  }
-  ////////////////////////////////////////////////////////////////////////////////
-  //          initialize arToolkitContext
-  ////////////////////////////////////////////////////////////////////////////////
-  // create atToolkitContext
-  var arToolkitContext = new window.THREEx.ArToolkitContext({
-    cameraParametersUrl: window.THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
-    detectionMode: 'mono',
-  });
-  // initialize it
-  arToolkitContext.init(() =>
-    // copy projection matrix to camera
-    camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix()));
-  // update artoolkit on every frame
-  onRenderFcts.push(() => {
-    if (arToolkitSource.ready === false) return;
-    arToolkitContext.update(arToolkitSource.domElement)
-    // update scene.visible if the marker is seen
-    scene.visible = camera.visible
-  });
-  ////////////////////////////////////////////////////////////////////////////////
-  //          Create a ArMarkerControls
-  ////////////////////////////////////////////////////////////////////////////////
-  // init controls for camera
-  var markerControls = new window.THREEx.ArMarkerControls(arToolkitContext, camera, {
-    type : 'pattern',
-    patternUrl : window.THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro',
-    // patternUrl : window.THREEx.ArToolkitContext.baseURL + '../data/data/patt.kanji',
-    // as we controls the camera, set changeMatrixMode: 'cameraTransformMatrix'
-    changeMatrixMode: 'cameraTransformMatrix'
-  })
-  // as we do changeMatrixMode: 'cameraTransformMatrix', start with invisible scene
-  scene.visible = false
-  //////////////////////////////////////////////////////////////////////////////////
-  //    add an object in the scene
-  //////////////////////////////////////////////////////////////////////////////////
-  // add a torus knot
-  var geometry  = new window.THREE.CubeGeometry(1,1,1);
-  var material  = new window.THREE.MeshNormalMaterial({
+import React, {useEffect, useRef, useState} from "react";
+import withWaitForCondition from "../WaitForCondition/withWaitForCondition";
+
+const buildCubeMesh = (size) => {
+  const geometry = new window.THREE.CubeGeometry(size, size, size);
+  const material = new window.THREE.MeshNormalMaterial({
     transparent : true,
     opacity: 0.5,
     side: window.THREE.DoubleSide
   });
-  var mesh  = new window.THREE.Mesh( geometry, material );
-  mesh.position.y  = geometry.parameters.height/2
-  scene.add( mesh );
-  var geometry  = new window.THREE.TorusKnotGeometry(0.3,0.1,64,16);
-  var material  = new window.THREE.MeshNormalMaterial();
-  var mesh  = new window.THREE.Mesh( geometry, material );
-  mesh.position.y  = 0.5
-  scene.add( mesh );
-  onRenderFcts.push(function(delta){
-    mesh.rotation.x += Math.PI*delta
-  })
-  //////////////////////////////////////////////////////////////////////////////////
-  //    render the whole thing on the page
-  //////////////////////////////////////////////////////////////////////////////////
-  // render the scene
-  onRenderFcts.push(function(){
-    renderer.render( scene, camera );
-  })
-  // run the rendering loop
-  var lastTimeMsec= null
-  requestAnimationFrame(function animate(nowMsec){
-    // keep looping
-    requestAnimationFrame( animate );
-    // measure time
-    lastTimeMsec  = lastTimeMsec || nowMsec-1000/60
-    var deltaMsec  = Math.min(200, nowMsec - lastTimeMsec)
-    lastTimeMsec  = nowMsec
-    // call each update function
-    onRenderFcts.forEach(function(onRenderFct){
-      onRenderFct(deltaMsec/1000, nowMsec/1000)
-    })
-  })
+
+  const mesh = new window.THREE.Mesh(geometry, material);
+  mesh.position.y = geometry.parameters.height / 2;
+  return mesh;
 };
 
-type Props = {};
+const buildMesh = (meshType: 'cube1' | 'cube2') => {
+  if (meshType === 'cube1') {
+    return buildCubeMesh(1);
+  } else {
+    return buildCubeMesh(0.5);
+  }
+};
 
-export default (props: Props) => {
+const createScene = (camera, mesh) => {
+  const scene = new window.THREE.Scene();
+
+  scene.visible = false;
+  scene.add(camera);
+  scene.add(mesh);
+
+  return scene;
+};
+
+const ARView = ({ meshType }: { meshType: 'cube1' | 'cube2' }) => {
+  const [rendererElement, setRendererElement] = useState(null);
+  const camera = useRef(null);
+  const scene = useRef(null);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => document.body.style.overflow = null;
+  }, []);
+
+  useEffect(() => {
+    if (!scene.current) {
+      return;
+    }
+
+    scene.current.visible = false;
+
+    scene.current = createScene(camera.current, buildMesh(meshType));
+  }, [meshType]);
+
+  useEffect(() => {
+    const renderer  = new window.THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true
+    });
+
+    renderer.setClearColor(new window.THREE.Color('lightgrey'), 0);
+    renderer.setSize(640, 480);
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.top = '0px';
+    renderer.domElement.style.left = '0px';
+
+    setRendererElement(renderer.domElement);
+
+    const onRenderFcts = [];
+    camera.current = new window.THREE.Camera();
+    scene.current = createScene(camera.current, buildMesh(meshType));
+
+    const arToolkitSource = new window.THREEx.ArToolkitSource({
+      sourceType : 'webcam',
+    });
+
+    const onResize = () => {
+      arToolkitSource.onResizeElement();
+      arToolkitSource.copyElementSizeTo(renderer.domElement);
+      if (arToolkitContext.arController !== null) {
+        arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+      }
+    };
+
+    arToolkitSource.init(onResize);
+    window.addEventListener('resize', onResize);
+
+    const arToolkitContext = new window.THREEx.ArToolkitContext({
+      cameraParametersUrl: window.THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
+      detectionMode: 'mono',
+    });
+
+    arToolkitContext.init(() => camera.current.projectionMatrix.copy(arToolkitContext.getProjectionMatrix()));
+
+    onRenderFcts.push(() => {
+      if (arToolkitSource.ready === false) {
+        return;
+      }
+      arToolkitContext.update(arToolkitSource.domElement);
+      scene.current.visible = camera.current.visible;
+    });
+
+    new window.THREEx.ArMarkerControls(arToolkitContext, camera.current, {
+      type : 'pattern',
+      patternUrl : window.THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro',
+      changeMatrixMode: 'cameraTransformMatrix'
+    });
+
+    onRenderFcts.push(() => renderer.render(scene.current, camera.current));
+
+    const animationInteval = setInterval(
+      () => onRenderFcts.map(onRenderFct => onRenderFct()),
+      16
+    );
+
+    return () => {
+      clearInterval(animationInteval);
+      renderer.domElement && renderer.domElement.remove();
+      arToolkitSource.domElement && arToolkitSource.domElement.remove();
+    }
+  }, []);
+
+  return (
+    <div ref={nodeElement => nodeElement && rendererElement && nodeElement.appendChild(rendererElement)}>
+      <div style={{ width: '50px', height: '100vh', backgroundColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16) }} />
+    </div>
+  );
+};
+
+const ARViewWithWait = withWaitForCondition(
+  () =>
+    'THREE' in window &&
+    'THREEx' in window &&
+    'ArToolkitSource' in window.THREEx &&
+    'ArToolkitContext' in window.THREEx &&
+    'ArMarkerControls' in window.THREEx,
+  200,
+)(ARView);
+
+const ARViewChanger = () => {
+  const [meshType, setMeshType] = useState('cube1');
+
+  useEffect(() => {
+    const changeInterval = setInterval(() => {
+      setMeshType(meshType === 'cube1' ? 'cube2' : 'cube1');
+    }, 2000);
+
+    return () => clearInterval(changeInterval);
+  }, [meshType]);
 
 
-  useEffect(a, []);
+  return (
+    <ARViewWithWait meshType={meshType} />
+  )
+};
 
-  return <div />;
-}
 
 
+export default ARViewChanger;
