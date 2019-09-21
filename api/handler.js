@@ -21,6 +21,12 @@ module.exports.publish = (event, context, callback) => {
       message: 'Done!',
       input: body,
     }),
+    headers: {
+      'Access-Control-Allow-Headers': 'origin, content-type, accept, authorization, cache-control',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
+      'Access-Control-Allow-Credentials': true,
+    },
   };
 
   callback(null, response);

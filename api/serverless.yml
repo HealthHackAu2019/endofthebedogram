@@ -1,5 +1,19 @@
 service: juno-health
 
+.cors_template: &CORS
+  origin: '*'
+  headers:
+    - Origin
+    - Accept
+    - Cache-Control
+    - Content-Type
+    - X-Amz-Date
+    - Authorization
+    - X-Api-Key
+    - X-Amz-Security-Token
+    - X-Amz-User-Agent
+  allowCredentials: false
+
 provider:
   name: aws
   runtime: nodejs8.10
@@ -25,6 +39,8 @@ functions:
       - http:
           path: publish
           method: post
+          cors:
+            <<: *CORS
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

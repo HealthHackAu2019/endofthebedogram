@@ -1,3 +1,5 @@
 .envrc
 node_modules
 .serverless
+.tern-port
+node_modules

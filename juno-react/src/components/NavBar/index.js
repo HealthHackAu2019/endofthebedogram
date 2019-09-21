@@ -47,7 +47,7 @@ function DesktopContainer({ children, hideStartTraining, hero, location }: Props
               </Link>
               { !hideStartTraining ? (
                 <Menu.Item position='right'>
-                  <Link to={Paths.TRAINEE}>
+                  <Link to={Paths.TRAINER}>
                     <Button as='div' inverted={!fixedMenuVisible}>Start Training Session</Button>
                   </Link>
                   <Link to={Paths.TRAINEE}>

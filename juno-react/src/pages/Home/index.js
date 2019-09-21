@@ -1,5 +1,3 @@
-// @flow
-
 import React, { useEffect, useState } from 'react';
 import Pusher from 'pusher-js';
 import {
