@@ -40,10 +40,10 @@ function DesktopContainer({ children, hideStartTraining, hero, location }: Props
           >
             <Container>
               <Link to={Paths.HOME}>
-                <Menu.Item as='div' active={location.pathname == Paths.HOME}>Home</Menu.Item>
+                <Menu.Item as='div' active={location.pathname === Paths.HOME}>Home</Menu.Item>
               </Link>
               <Link to={Paths.ABOUT}>
-                <Menu.Item as='div' active={location.pathname == Paths.ABOUT}>About</Menu.Item>
+                <Menu.Item as='div' active={location.pathname === Paths.ABOUT}>About</Menu.Item>
               </Link>
               { !hideStartTraining ? (
                 <Menu.Item position='right'>
@@ -83,20 +83,20 @@ function MobileNonHeroContainer({ children, hideStartTraining, location }: NonHe
         >
           <Container>
             <Link to={Paths.HOME}>
-              <Menu.Item as='div' active={location.pathname == Paths.HOME}>Home</Menu.Item>
+              <Menu.Item as='div' active={location.pathname === Paths.HOME}>Home</Menu.Item>
             </Link>
             <Link to={Paths.ABOUT}>
-              <Menu.Item as='div' active={location.pathname == Paths.ABOUT}>About</Menu.Item>
+              <Menu.Item as='div' active={location.pathname === Paths.ABOUT}>About</Menu.Item>
             </Link>
             { !hideStartTraining ? (
               <Fragment>
                 <Link to={Paths.TRAINER}>
-                  <Menu.Item as='div' active={location.pathname == Paths.TRAINER}>
+                  <Menu.Item as='div' active={location.pathname === Paths.TRAINER}>
                     Start Training Session
                   </Menu.Item>
                 </Link>
                 <Link to={Paths.TRAINEE}>
-                  <Menu.Item as='div' active={location.pathname == Paths.TRAINEE}>
+                  <Menu.Item as='div' active={location.pathname === Paths.TRAINEE}>
                     Join Training Session
                   </Menu.Item>
                 </Link>
@@ -124,10 +124,10 @@ function MobileHeroContainer({ children, hideStartTraining, location }: NonHeroP
         visible={sidebarOpened}
       >
         <Link to={Paths.HOME}>
-          <Menu.Item as='div' active={location.pathname == Paths.HOME}>Home</Menu.Item>
+          <Menu.Item as='div' active={location.pathname === Paths.HOME}>Home</Menu.Item>
         </Link>
         <Link to={Paths.ABOUT}>
-          <Menu.Item as='div' active={location.pathname == Paths.ABOUT}>About</Menu.Item>
+          <Menu.Item as='div' active={location.pathname === Paths.ABOUT}>About</Menu.Item>
         </Link>
 
         { !hideStartTraining ? (

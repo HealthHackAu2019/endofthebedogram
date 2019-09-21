@@ -11,7 +11,6 @@ import {
   Segment,
 } from "semantic-ui-react";
 import cn from "classnames";
-import ResponsiveContainer from "./ResponsiveContainer";
 import styles from "./styles.module.scss";
 import HomepageHeading from "./HomepageHeading";
 import NavBar from "../../components/NavBar";
