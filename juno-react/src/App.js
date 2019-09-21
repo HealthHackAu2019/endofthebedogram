@@ -7,6 +7,7 @@ import About from "./pages/About";
 import Trainer from "./pages/Trainer";
 import Trainee from "./pages/Trainee";
 import ARView from "./components/ARView";
+import Baby from "./pages/Baby";
 
 export const Paths = {
   HOME: "/",
@@ -22,6 +23,7 @@ const App = () => (
     <Route path={Paths.TRAINER} exact component={Trainer} />
     <Route path={Paths.TRAINEE} exact component={Trainee} />
     <Route path="/ar" exact component={ARView} />
+    <Route path="/baby/" component={Baby} />
   </Router>
 );
 
