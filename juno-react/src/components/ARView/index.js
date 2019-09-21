@@ -3,6 +3,15 @@
 import React, {useEffect, useRef, useState} from "react";
 import withWaitForCondition from "../WaitForCondition/withWaitForCondition";
 
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
 const buildCubeMesh = (size) => {
   const geometry = new window.THREE.CubeGeometry(size, size, size);
   const material = new window.THREE.MeshNormalMaterial({
@@ -34,7 +43,7 @@ const createScene = (camera, mesh) => {
   return scene;
 };
 
-const ARView = ({ meshType }: { meshType: 'cube1' | 'cube2' }) => {
+const ARView = ({ meshType, debug }: { meshType: 'cube1' | 'cube2', debug: boolean }) => {
   const [rendererElement, setRendererElement] = useState(null);
   const camera = useRef(null);
   const scene = useRef(null);
@@ -124,7 +133,7 @@ const ARView = ({ meshType }: { meshType: 'cube1' | 'cube2' }) => {
 
   return (
     <div ref={nodeElement => nodeElement && rendererElement && nodeElement.appendChild(rendererElement)}>
-      <div style={{ width: '50px', height: '100vh', backgroundColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16) }} />
+      { debug && <div style={{ width: '50px', height: '100vh', backgroundColor: `${getRandomColor()}77` }} /> }
     </div>
   );
 };
@@ -152,7 +161,7 @@ const ARViewChanger = () => {
 
 
   return (
-    <ARViewWithWait meshType={meshType} />
+    <ARViewWithWait meshType={meshType} debug={true} />
   )
 };
 
