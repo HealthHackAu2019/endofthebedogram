@@ -2,6 +2,8 @@
 
 import React, { useState, type Node } from "react";
 import { Button, Container, Icon, Menu, Responsive, Segment, Sidebar, Visibility } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Paths } from "../../App";
 import HomepageHeading from "./HomepageHeading";
 
 function DesktopContainer({ children }: { children: Node }) {
@@ -28,17 +30,19 @@ function DesktopContainer({ children }: { children: Node }) {
             size='large'
           >
             <Container>
-              <Menu.Item as='a' active>
-                Home
-              </Menu.Item>
-              <Menu.Item as='a'>About</Menu.Item>
+              <Link to={Paths.HOME}>
+                <Menu.Item active>Home</Menu.Item>
+              </Link>
+              <Link to={Paths.ABOUT}>
+                <Menu.Item as='a'>About</Menu.Item>
+              </Link>
               <Menu.Item position='right'>
-                <Button as='a' inverted={!fixedMenuVisible}>
-                  Start Training Session
-                </Button>
-                <Button as='a' inverted={!fixedMenuVisible} primary={fixedMenuVisible} style={{ marginLeft: '0.5em' }}>
-                  Join Training Session
-                </Button>
+                <Link to={Paths.TRAINEE}>
+                  <Button as='a' inverted={!fixedMenuVisible}>Start Training Session</Button>
+                </Link>
+                <Link to={Paths.TRAINEE}>
+                  <Button as='a' inverted={!fixedMenuVisible} primary={fixedMenuVisible} style={{ marginLeft: '0.5em' }}>Join Training Session</Button>
+                </Link>
               </Menu.Item>
             </Container>
           </Menu>

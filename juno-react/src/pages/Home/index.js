@@ -13,6 +13,8 @@ import {
 import cn from "classnames";
 import ResponsiveContainer from "./ResponsiveContainer";
 import styles from "./styles.module.scss";
+import HomepageHeading from "./HomepageHeading";
+import NavBar from "../../components/NavBar";
 
 const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
   cluster: process.env.REACT_APP_PUSHER_CLUSTER,
@@ -34,7 +36,10 @@ function Home() {
 
 
   return (
-    <ResponsiveContainer>
+    <div>
+      <NavBar hero>
+        <HomepageHeading/>
+      </NavBar>
       <p>{message}</p>
 
       <Segment className={styles.topPadding} vertical>
@@ -118,7 +123,7 @@ function Home() {
           </Button>
         </Container>
       </Segment>
-    </ResponsiveContainer>
+    </div>
   );
 }
 
