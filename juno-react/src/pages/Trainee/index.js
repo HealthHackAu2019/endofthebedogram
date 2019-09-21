@@ -6,6 +6,7 @@ import {
   Input,
 } from "semantic-ui-react";
 import Pusher from 'pusher-js';
+import axios from 'axios';
 
 const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
   cluster: process.env.REACT_APP_PUSHER_CLUSTER,
@@ -19,18 +20,26 @@ const Trainee = () => {
   const handleUpdateChannelName = useCallback(e => setChannelName(e.target.value), []);
 
   // Start the training session
-  const handleJoinSession = useCallback(() => {
+  const handleJoinSession = useCallback(() => (async () => {
     if (!channelName) {
       alert('Channel name is mandatory');
       return;
     }
+
+    await axios.post(`${process.env.REACT_APP_API_URL}/publish`, {
+      channel: channelName,
+      event: 'trainee-event',
+      message: JSON.stringify({
+        action: 'joined',
+      }),
+    });
 
     pusher.subscribe(channelName);
     pusher.bind('trainer-event', (data) => {
       setTrainerEvents([...trainerEvents, data]);
     });
     setConnected(true);
-  }, [channelName, trainerEvents]);
+  })(), [channelName, trainerEvents]);
 
   return (
     <div>

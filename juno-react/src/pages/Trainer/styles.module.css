@@ -1,0 +1,14 @@
+#content {
+  margin: 20px;
+  margin-top: 70px;
+}
+
+.column {
+  padding-bottom: 20px;
+}
+
+.imagePlaceholder {
+  background-color: #666;
+  width: 450px;
+  height: 450px;
+}
