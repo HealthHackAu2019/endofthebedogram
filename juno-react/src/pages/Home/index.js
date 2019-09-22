@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
-  Button,
-  Container,
-  Divider,
   Grid,
   Header,
   Segment,
+  Image,
 } from "semantic-ui-react";
-import cn from "classnames";
 import styles from "./styles.module.scss";
 import HomepageHeading from "./HomepageHeading";
 import NavBar from "../../components/NavBar";
-import {Link} from "react-router-dom";
+import baby from "../../img/baby.jpg";
 
 function Home() {
   return (
@@ -41,68 +38,15 @@ function Home() {
               augmented reality overlay of the manikin with a number of presentations and skin types.
               </p>
             </Grid.Column>
-            <Grid.Column floated='right' width={6}>
-              <div className={styles.imagePlaceholder} />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column textAlign='center'>
-              <Button size='huge'>Check Them Out</Button>
+            <Grid.Column floated='right' width={8}>
+              <Image src={baby} rounded />
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Segment>
 
-      <Segment className={styles.noPadding} vertical>
-        <Grid celled='internally' columns='equal' stackable>
-          <Grid.Row textAlign='center'>
-            <Grid.Column className={styles.gridPadding}>
-              <Header as='h3' className={styles.header}>
-                "Quote"
-              </Header>
-              <p className={styles.details}>Details</p>
-            </Grid.Column>
-            <Grid.Column className={styles.gridPadding}>
-              <Header as='h3' className={styles.header}>
-                "Quote"
-              </Header>
-              <p className={styles.details}>Details</p>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
 
-      <Segment className={styles.topPadding} vertical>
-        <Container text>
-          <Header as='h3' className={styles.header}>
-            Header
-          </Header>
-          <p className={styles.details}>
-            Some content here
-          </p>
-          <Button as='a' size='large'>
-            Action
-          </Button>
 
-          <Divider
-            as='h4'
-            horizontal
-            className={cn('header', styles.divider)}
-          >
-            Divider
-          </Divider>
-
-          <Header as='h3' className={styles.header}>
-            Header
-          </Header>
-          <p className={styles.details}>
-            Some content here
-          </p>
-          <Button as='a' size='large'>
-            Action
-          </Button>
-        </Container>
-      </Segment>
     </div>
   );
 }

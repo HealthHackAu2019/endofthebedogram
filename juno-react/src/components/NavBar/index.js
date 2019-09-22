@@ -28,7 +28,7 @@ function DesktopContainer({ children, hideStartTraining, hero, location }: Props
         <Segment
           inverted
           textAlign='center'
-          style={hero ? { minHeight: 700, padding: '1em 0em' } : { padding: '0' }}
+          style={hero ? { minHeight: 700, padding: '1em 0em', minHeight: "100vh" } : { padding: '0' }}
           vertical
         >
           <Menu
@@ -42,26 +42,12 @@ function DesktopContainer({ children, hideStartTraining, hero, location }: Props
               <Link to={Paths.HOME}>
                 <Menu.Item as='div' active={location.pathname === Paths.HOME}>Home</Menu.Item>
               </Link>
-              <Link to={Paths.ABOUT}>
-                <Menu.Item as='div' active={location.pathname === Paths.ABOUT}>About</Menu.Item>
-              </Link>
-              { !hideStartTraining ? (
-                <Menu.Item position='right'>
-                  <Link to={Paths.TRAINER}>
-                    <Button as='div' inverted={!fixedMenuVisible}>Start Training Session</Button>
-                  </Link>
-                  <Link to={Paths.TRAINEE}>
-                    <Button as='div' inverted={!fixedMenuVisible} primary={fixedMenuVisible} style={{ marginLeft: '0.5em' }}>Join Training Session</Button>
-                  </Link>
-                </Menu.Item>
-              ) : null }
+
             </Container>
           </Menu>
           {children}
         </Segment>
       </Visibility>
-
-      {children}
     </Responsive>
   )
 }
@@ -85,23 +71,6 @@ function MobileNonHeroContainer({ children, hideStartTraining, location }: NonHe
             <Link to={Paths.HOME}>
               <Menu.Item as='div' active={location.pathname === Paths.HOME}>Home</Menu.Item>
             </Link>
-            <Link to={Paths.ABOUT}>
-              <Menu.Item as='div' active={location.pathname === Paths.ABOUT}>About</Menu.Item>
-            </Link>
-            { !hideStartTraining ? (
-              <Fragment>
-                <Link to={Paths.TRAINER}>
-                  <Menu.Item as='div' active={location.pathname === Paths.TRAINER}>
-                    Start Training Session
-                  </Menu.Item>
-                </Link>
-                <Link to={Paths.TRAINEE}>
-                  <Menu.Item as='div' active={location.pathname === Paths.TRAINEE}>
-                    Join Training Session
-                  </Menu.Item>
-                </Link>
-              </Fragment>
-            ) : null }
           </Container>
         </Menu>
         {children}
@@ -126,27 +95,15 @@ function MobileHeroContainer({ children, hideStartTraining, location }: NonHeroP
         <Link to={Paths.HOME}>
           <Menu.Item as='div' active={location.pathname === Paths.HOME}>Home</Menu.Item>
         </Link>
-        <Link to={Paths.ABOUT}>
-          <Menu.Item as='div' active={location.pathname === Paths.ABOUT}>About</Menu.Item>
-        </Link>
 
-        { !hideStartTraining ? (
-          <Fragment>
-            <Link to={Paths.TRAINER}>
-              <Menu.Item as='div'>Start Training Session</Menu.Item>
-            </Link>
-            <Link to={Paths.TRAINEE}>
-              <Menu.Item as='div'>Join Training Session</Menu.Item>
-            </Link>
-          </Fragment>
-        ) : null}
+
       </Sidebar>
 
       <Sidebar.Pusher dimmed={sidebarOpened}>
         <Segment
           inverted
           textAlign='center'
-          style={{ minHeight: 350, padding: '1em 0em' }}
+          style={{ minHeight: 350, padding: '1em 0em', minHeight: "100vh" }}
           vertical
         >
           <Container>
@@ -154,20 +111,6 @@ function MobileHeroContainer({ children, hideStartTraining, location }: NonHeroP
               <Menu.Item onClick={() => setSidebarOpened(true)}>
                 <Icon name='sidebar' />
               </Menu.Item>
-              { !hideStartTraining ? (
-                <Menu.Item position='right'>
-                  <Link to={Paths.TRAINER}>
-                    <Button as='div' inverted>
-                      Start Training Session
-                    </Button>
-                  </Link>
-                  <Link to={Paths.TRAINEE}>
-                    <Button as='div' inverted style={{ marginLeft: '0.5em' }}>
-                      Join Training Session
-                    </Button>
-                  </Link>
-                </Menu.Item>
-              ) : null }
             </Menu>
           </Container>
           {children}

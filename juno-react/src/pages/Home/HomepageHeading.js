@@ -1,7 +1,10 @@
 // @flow
 
 import React from 'react';
-import { Button, Container, Header, Icon } from "semantic-ui-react";
+import { Button, Container, Header} from "semantic-ui-react";
+import {Link, withRouter} from "react-router-dom";
+import {Paths} from "../../App";
+import styles from "./styles.module.scss"
 
 const HomepageHeading = () => (
   <Container text>
@@ -26,10 +29,19 @@ const HomepageHeading = () => (
         marginTop: '1.5em',
       }}
     />
-    <Button primary size='huge'>
-      Get Started
-      <Icon name='right arrow' />
-    </Button>
+
+    <div className={styles.buttonPadding}>
+        <Link to={Paths.TRAINER}>
+        <Button className="ui inverted green button" as='div'>Trainer</Button>
+        </Link>
+    </div>
+
+    <div className={styles.buttonPadding}>
+        <Link to={Paths.TRAINEE}>
+            <Button className="ui inverted blue button" as='div'>Trainee</Button>
+        </Link>
+    </div>
+
   </Container>
 );
 
