@@ -45,19 +45,20 @@ function Home() {
           <Grid.Row>
             <Grid.Column width={8}>
               <Header as='h3' className={styles.header}>
-                We Help Companies and Companions
-                <Link to="/ar">AR Test</Link>
+                Plastic Baby Manikins Aren't Good Enough
               </Header>
               <p className={styles.details}>
-                We can give your company superpowers to do things that they never thought possible.
-                Let us delight your customers and empower your needs... through pure data analytics.
+                When assessing neonates, Midwives and Doctors too often mistake normal presentations as signs of
+                disease. When this results in unnecessary procedures being performed it can cause distress to the baby
+                / family, be unnecessarily risky and costly. Educational programs to address this issue are currently
+                delivered using neonatal manikins that don’t accurately reflect the clinical signs.
               </p>
               <Header as='h3' className={styles.header}>
-                We Make Bananas That Can Dance
+                Disrupting the Endofthebedogram
               </Header>
               <p className={styles.details}>
-                Yes that's right, you thought it was the stuff of dreams, but even bananas can be
-                bioengineered.
+              Juno is an animated full body simulated baby, with varying skin tones.
+              augmented reality overlay of the manikin with a number of presentations and skin types.
               </p>
             </Grid.Column>
             <Grid.Column floated='right' width={6}>
