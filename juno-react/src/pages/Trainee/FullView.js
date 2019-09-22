@@ -6,7 +6,9 @@ import { EventTypes, publishEvent, usePusherSubscription } from "../../util/push
 const connectedCallback = (channel) => () => publishEvent(channel, EventTypes.TRAINEE, { action: 'joined' });
 
 const FullView = ({ channel }) => {
-  const [connectionStatus, pusherEvents] = usePusherSubscription(channel, EventTypes.TRAINER, connectedCallback(channel));
+  // const [connectionStatus, pusherEvents] = usePusherSubscription(channel, EventTypes.TRAINER, connectedCallback(channel));
+  const connectionStatus = "TESTING";
+  const pusherEvents = [];
   const latestEvent = pusherEvents[pusherEvents.length - 1];
 
   return (
@@ -18,7 +20,7 @@ const FullView = ({ channel }) => {
         PusherEvents:
         <pre>{JSON.stringify(latestEvent, null, 2)}</pre>
       </div>
-      <ARView />
+      <ARView model={latestEvent ? latestEvent.model : ""} />
     </Fragment>
   );
 };

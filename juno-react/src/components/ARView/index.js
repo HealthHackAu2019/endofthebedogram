@@ -4,38 +4,39 @@ import React, {useEffect, useRef, useState} from "react";
 import withWaitForCondition from "../WaitForCondition/withWaitForCondition";
 import DebugLine from "../DebugLine";
 
-const buildCubeMesh = (size) => {
-  const geometry = new window.THREE.CubeGeometry(size, size, size);
-  const material = new window.THREE.MeshNormalMaterial({
-    transparent : true,
-    opacity: 0.5,
-    side: window.THREE.DoubleSide
-  });
-
-  const mesh = new window.THREE.Mesh(geometry, material);
-  mesh.position.y = geometry.parameters.height / 2;
-  return mesh;
-};
-
-const buildMesh = (meshType: 'cube1' | 'cube2') => {
-  if (meshType === 'cube1') {
-    return buildCubeMesh(1);
-  } else {
-    return buildCubeMesh(0.5);
-  }
-};
-
-const createScene = (camera, mesh) => {
+const createScene = async (camera, modelUrl) => {
   const scene = new window.THREE.Scene();
 
   scene.visible = false;
   scene.add(camera);
-  scene.add(mesh);
 
-  return scene;
+  // Add lights
+  const ambientLight = new window.THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambientLight);
+
+  const pointLight = new window.THREE.PointLight(0xffffff, 1);
+  pointLight.position.set(0, 0, 2);
+  scene.add(pointLight);
+
+  const loader = new window.THREE.GLTFLoader();
+  return new Promise((resolve) => {
+    loader.load(modelUrl, (object) => {
+      object.scene.position.set(0, 0, 0);
+      object.scene.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
+
+      window.objj = object;
+
+      console.log(object);
+      console.log(object.scene);
+
+      scene.add(object.scene);
+      resolve(scene);
+    });
+  });
 };
 
-const ARView = ({ meshType, debug }: { meshType: 'cube1' | 'cube2', debug: boolean }) => {
+const ARView = () => {
+  const modelUrl = "https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby012.glb";
   const [rendererElement, setRendererElement] = useState(null);
   const camera = useRef(null);
   const scene = useRef(null);
@@ -45,17 +46,21 @@ const ARView = ({ meshType, debug }: { meshType: 'cube1' | 'cube2', debug: boole
     return () => document.body.style.overflow = null;
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!scene.current) {
       return;
     }
 
+    console.log("Creating new scene");
+    const newScene = await createScene(camera.current, modelUrl);
+
+    console.log("Loading new scene");
     scene.current.visible = false;
+    scene.current = newScene;
+    scene.current.visible = true;
+  }, [modelUrl]);
 
-    scene.current = createScene(camera.current, buildMesh(meshType));
-  }, [meshType]);
-
-  useEffect(() => {
+  useEffect(async () => {
     const renderer  = new window.THREE.WebGLRenderer({
       antialias: true,
       alpha: true
@@ -71,7 +76,7 @@ const ARView = ({ meshType, debug }: { meshType: 'cube1' | 'cube2', debug: boole
 
     const onRenderFcts = [];
     camera.current = new window.THREE.Camera();
-    scene.current = createScene(camera.current, buildMesh(meshType));
+    scene.current = await createScene(camera.current, modelUrl);
 
     const arToolkitSource = new window.THREEx.ArToolkitSource({
       sourceType : 'webcam',
@@ -125,7 +130,7 @@ const ARView = ({ meshType, debug }: { meshType: 'cube1' | 'cube2', debug: boole
 
   return (
     <div ref={nodeElement => nodeElement && rendererElement && nodeElement.appendChild(rendererElement)}>
-      <DebugLine enabled={debug} right />
+      <DebugLine enabled right />
     </div>
   );
 };
@@ -133,6 +138,7 @@ const ARView = ({ meshType, debug }: { meshType: 'cube1' | 'cube2', debug: boole
 const ARViewWithWait = withWaitForCondition(
   () =>
     'THREE' in window &&
+    'GLTFLoader' in window.THREE &&
     'THREEx' in window &&
     'ArToolkitSource' in window.THREEx &&
     'ArToolkitContext' in window.THREEx &&
@@ -157,4 +163,5 @@ const ARViewChanger = () => {
   )
 };
 
-export default ARViewChanger;
+export default ARViewWithWait;
+// export default ARViewChanger;
