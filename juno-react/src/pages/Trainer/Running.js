@@ -14,33 +14,25 @@ import {EventTypes, publishEvent, usePusherSubscription} from "../../util/pusher
 
 const models = {
   'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby040.glTF.glb': 'Normal',
-  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/face-attempt-001.glTF.glb': 'Chainsaw Massacre',
+  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/face-attempt-001.glTF.glb': 'Face condition',
+  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby-045-chest.glTF.glb': 'Chest condition',
   'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby012.glb': 'Plain',
 };
 
-const textures = {
-  texture1: 'Texture 1',
-  texture2: 'Texture 2',
-  texture3: 'Texture 3',
-};
-
 const modelKeys = Object.keys(models);
-const textureKeys = Object.keys(textures);
 
-const publish = ({ channelName, model, texture }) =>
+const publish = ({ channelName, model }) =>
   publishEvent(channelName, EventTypes.TRAINER, {
     model,
-    texture,
   });
 
 const Running = ({ channelName }) => {
   const [connectionStatus, pusherEvents] = usePusherSubscription(channelName, EventTypes.TRAINEE);
   const [model, setModel] = useState(modelKeys[0]);
-  const [texture, setTexture] = useState(textureKeys[0]);
 
   useEffect(() => {
-    publish({ channelName, model, texture });
-  }, [channelName, model, texture, pusherEvents]);
+    publish({ channelName, model });
+  }, [channelName, model, pusherEvents]);
 
   return (
     <div>
@@ -63,7 +55,7 @@ const Running = ({ channelName }) => {
       <Segment id={styles.content} vertical>
         <Grid container stackable verticalAlign='middle'>
           <Grid.Row>
-            <Grid.Column width={8} className={styles.column}>
+            <Grid.Column width={16} className={styles.column}>
               <Header as='h3'>Models</Header>
               {modelKeys.map(m => (
                 <Button
@@ -72,18 +64,6 @@ const Running = ({ channelName }) => {
                   primary={m === model}
                 >
                   {models[m]}
-                </Button>
-              ))}
-            </Grid.Column>
-            <Grid.Column width={8} className={styles.column}>
-              <Header as='h3'>Textures</Header>
-              {textureKeys.map(t => (
-                <Button
-                  key={t}
-                  onClick={() => setTexture(t)}
-                  primary={t === texture}
-                >
-                  {textures[t]}
                 </Button>
               ))}
             </Grid.Column>
