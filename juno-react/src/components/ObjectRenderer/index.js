@@ -1,10 +1,7 @@
 import React from "react";
-import ObjectRenderer from '../../components/ObjectRenderer';
 import withWaitForCondition from '../../components/WaitForCondition/withWaitForCondition';
 
-const babyModel = ("https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby040.glTF.glb");
-
-/*class Baby extends React.Component {
+class ObjectRenderer extends React.Component {
   state = { loading: true };
 
   componentDidMount(){
@@ -22,7 +19,7 @@ const babyModel = ("https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/m
       1,
       1000
     );
-    this.camera.position.set(0, 0, -50);
+    this.camera.position.set(0, 0, this.props.zPosition);
     this.camera.zoom = 500;
 
     // Add lights
@@ -30,9 +27,8 @@ const babyModel = ("https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/m
     this.scene.add(ambientLight);
 
     var pointLight = new window.THREE.PointLight(0xffffff, 1);
-    pointLight.position.set(0, 0, -48);
+    pointLight.position.set(0, 0, this.props.zPosition + 2);
     this.scene.add(pointLight);
-
 
     //ADD RENDERER
     this.renderer = new window.THREE.WebGLRenderer({ antialias: true });
@@ -43,8 +39,8 @@ const babyModel = ("https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/m
 
     // Load stuff
     const loader = new window.THREE.GLTFLoader();
-    loader.load(babyModel, (object) => {
-      object.scene.position.set(0, 0, -53);
+    loader.load(this.props.modelPath, (object) => {
+      object.scene.position.set(0, 0, this.props.zPosition - this.props.zOffset);
       console.log(object.scene);
 
       this.object = object.scene;
@@ -96,17 +92,9 @@ const babyModel = ("https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/m
       </>
     )
   }
-}*/
+}
 
-const Baby = () => (
-  <ObjectRenderer
-    modelPath={babyModel}
-    zPosition={-50}
-    zOffset={3}
-  />
-)
-
-const WithWaitForCondition = withWaitForCondition(
+const ObjectRendererWithWait = withWaitForCondition(
   () =>
     'THREE' in window &&
     'DDSLoader' in window.THREE &&
@@ -114,6 +102,7 @@ const WithWaitForCondition = withWaitForCondition(
     'OBJLoader' in window.THREE &&
     'GLTFLoader' in window.THREE,
   200,
-)(Baby);
+)(ObjectRenderer);
 
-export default WithWaitForCondition;
+
+export default ObjectRendererWithWait;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Pusher from 'pusher-js';
 import {
   Button,
   Container,
@@ -14,31 +13,12 @@ import HomepageHeading from "./HomepageHeading";
 import NavBar from "../../components/NavBar";
 import {Link} from "react-router-dom";
 
-const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
-  cluster: process.env.REACT_APP_PUSHER_CLUSTER,
-  forceTLS: true,
-});
-
-const channelName = 'channel001';
-const eventName = 'event001';
-
 function Home() {
-  const [ message, setMessage ] = useState('');
-
-  useEffect(() => {
-    const ch = pusher.subscribe(channelName);
-    ch.bind(eventName, (msg) => setMessage(JSON.stringify(msg)));
-
-    return () => pusher.unsubscribe(channelName);
-  }, []);
-
-
   return (
     <div>
       <NavBar hero>
         <HomepageHeading/>
       </NavBar>
-      <p>{message}</p>
 
       <Segment className={styles.topPadding} vertical>
         <Grid container stackable verticalAlign='middle'>
