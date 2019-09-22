@@ -18,16 +18,15 @@ const createScene = async (camera, modelUrl) => {
   pointLight.position.set(0, 0, 2);
   scene.add(pointLight);
 
+  if (!modelUrl) {
+    return Promise.resolve(scene);
+  }
+
   const loader = new window.THREE.GLTFLoader();
   return new Promise((resolve) => {
     loader.load(modelUrl, (object) => {
       object.scene.position.set(0, 0, 0);
       object.scene.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
-
-      window.objj = object;
-
-      console.log(object);
-      console.log(object.scene);
 
       scene.add(object.scene);
       resolve(scene);
@@ -35,8 +34,7 @@ const createScene = async (camera, modelUrl) => {
   });
 };
 
-const ARView = () => {
-  const modelUrl = "https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby012.glb";
+const ARView = ({ model }) => {
   const [rendererElement, setRendererElement] = useState(null);
   const camera = useRef(null);
   const scene = useRef(null);
@@ -46,21 +44,21 @@ const ARView = () => {
     return () => document.body.style.overflow = null;
   }, []);
 
-  useEffect(async () => {
+  useEffect(() => {
     if (!scene.current) {
       return;
     }
 
     console.log("Creating new scene");
-    const newScene = await createScene(camera.current, modelUrl);
+    createScene(camera.current, model).then(newScene => {
+      console.log("Loading new scene");
+      scene.current.visible = false;
+      scene.current = newScene;
+      scene.current.visible = true;
+    });
+  }, [model]);
 
-    console.log("Loading new scene");
-    scene.current.visible = false;
-    scene.current = newScene;
-    scene.current.visible = true;
-  }, [modelUrl]);
-
-  useEffect(async () => {
+  useEffect(() => {
     const renderer  = new window.THREE.WebGLRenderer({
       antialias: true,
       alpha: true
@@ -76,7 +74,7 @@ const ARView = () => {
 
     const onRenderFcts = [];
     camera.current = new window.THREE.Camera();
-    scene.current = await createScene(camera.current, modelUrl);
+    createScene(camera.current, model).then(newScene => scene.current = newScene);
 
     const arToolkitSource = new window.THREEx.ArToolkitSource({
       sourceType : 'webcam',
@@ -146,22 +144,4 @@ const ARViewWithWait = withWaitForCondition(
   200,
 )(ARView);
 
-const ARViewChanger = () => {
-  const [meshType, setMeshType] = useState('cube1');
-
-  useEffect(() => {
-    const changeInterval = setInterval(() => {
-      setMeshType(meshType === 'cube1' ? 'cube2' : 'cube1');
-    }, 2000);
-
-    return () => clearInterval(changeInterval);
-  }, [meshType]);
-
-
-  return (
-    <ARViewWithWait meshType={meshType} debug={true} />
-  )
-};
-
 export default ARViewWithWait;
-// export default ARViewChanger;
