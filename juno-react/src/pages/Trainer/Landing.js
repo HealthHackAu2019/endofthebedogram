@@ -3,6 +3,7 @@ import {
   Button,
   Header,
   Input,
+  Form,
 } from "semantic-ui-react";
 import styles from './styles.module.css';
 import NavBar from "../../components/NavBar";
@@ -25,12 +26,12 @@ const Landing = ({ onStart }) => {
     <Fragment>
       <NavBar hideStartTraining />
       <div className={styles.landingLayout}>
-        <Header as="h2">Your room code is:</Header>
-        <div className={styles.inputPadding}>
-          <Input className={styles.upperInput} value={channelName.current} readOnly size="massive" />
+        <Header as="h2">Your session code is:</Header>
+        <Form onSubmit={() => onStart(channelName.current)}>
+          <Form.Input className={styles.upperInput} value={channelName.current} readOnly size="massive" />
+          <Form.Button size="massive" primary>Start training session</Form.Button>
+        </Form>
         </div>
-        <Button as="div" size="massive" primary onClick={() => onStart(channelName.current)}>Start training session</Button>
-      </div>
     </Fragment>
   );
 };

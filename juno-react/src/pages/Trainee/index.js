@@ -1,12 +1,14 @@
 import React, { useState, useCallback } from "react";
 import {
-  Button,
-  Container,
-  Menu,
-  Input,
+  Form,
+  Grid,
+  Header,
 } from "semantic-ui-react";
+
 import FullView from "./FullView";
 import styles from "./styles.module.css";
+
+import NavBar from "../../components/NavBar";
 
 const Trainee = () => {
   const [isSubmitted, setSubmitted] = useState(false);
@@ -34,20 +36,30 @@ const Trainee = () => {
   } else {
     return (
       <div>
-        <Menu
-          fixed="top"
-          size='large'
-          inverted
-        >
-          <Container>
-            <Menu.Item as='div' className="ui input">
-              <Input value={channelName} onChange={handleUpdateChannelName} className={styles.upperInput} />
-            </Menu.Item>
-            <Menu.Item as='div'>
-              <Button as="div" primary onClick={handleJoinSession}>Join training session</Button>
-            </Menu.Item>
-          </Container>
-        </Menu>
+        <NavBar hideStartTraining />
+        <Grid textAlign='center' style={{ height: '100vh', 'background-color': '#1b1c1d' }} verticalAlign='middle'>
+          <Grid.Column style={{ maxWidth: '80vw' }}>
+            <Header as='h2' style={{ color: 'white' }} textAlign='center'>
+              Please enter your session code:
+            </Header>
+              <Form
+                onSubmit={handleJoinSession}>
+                  <Form.Input
+                    fluid icon='key'
+                    iconPosition='left'
+                    placeholder='Session Code' 
+                    size="massive"
+                    value={channelName}
+                    onChange={handleUpdateChannelName}/>
+                <Form.Button
+                  primary
+                  fluid
+                  size='massive'>
+                  Join Training Session
+                </Form.Button>
+              </Form>
+          </Grid.Column>
+        </Grid>
       </div>
     );
   }
