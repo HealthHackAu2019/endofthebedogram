@@ -65,7 +65,7 @@ const ARView = ({ model }) => {
     });
 
     renderer.setClearColor(new window.THREE.Color('lightgrey'), 0);
-    renderer.setSize(640, 480);
+    renderer.setSize(1280, 960);
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0px';
     renderer.domElement.style.left = '0px';
