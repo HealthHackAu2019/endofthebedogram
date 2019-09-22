@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF';
@@ -9,7 +9,9 @@ const getRandomColor = () => {
   return color;
 };
 
-export default ({ enabled, right }) => {
+export default ({ line, enabled, right, children }) => {
+  return false;
+
   if (!enabled) {
     return null
   }
@@ -23,6 +25,11 @@ export default ({ enabled, right }) => {
     ...(right ? { right: 0 } : { left: 0 }),
   };
 
-  return <div style={styles}/>;
+  return (
+    <Fragment>
+      {line && <div style={styles} />}
+      {children}
+    </Fragment>
+  );
 }
 

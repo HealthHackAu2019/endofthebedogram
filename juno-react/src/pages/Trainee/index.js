@@ -29,7 +29,7 @@ const Trainee = () => {
     setSubmitted(true);
   })(), [channelName, isSubmitted]);
 
-  if (isSubmitted) {
+  if (isSubmitted || true) {
     return (
       <FullView channel={channelName} />
     )
@@ -47,7 +47,7 @@ const Trainee = () => {
                   <Form.Input
                     fluid icon='key'
                     iconPosition='left'
-                    placeholder='Session Code' 
+                    placeholder='Session Code'
                     size="massive"
                     value={channelName}
                     onChange={handleUpdateChannelName}/>

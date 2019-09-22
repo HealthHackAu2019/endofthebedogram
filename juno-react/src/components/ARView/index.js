@@ -2,7 +2,7 @@
 
 import React, {useEffect, useRef, useState} from "react";
 import withWaitForCondition from "../WaitForCondition/withWaitForCondition";
-import DebugLine from "../DebugLine";
+import Debug from "../Debug";
 
 const createScene = async (camera, modelUrl) => {
   const scene = new window.THREE.Scene();
@@ -10,12 +10,11 @@ const createScene = async (camera, modelUrl) => {
   scene.visible = false;
   scene.add(camera);
 
-  // Add lights
   const ambientLight = new window.THREE.AmbientLight(0xffffff, 0.5);
   scene.add(ambientLight);
 
   const pointLight = new window.THREE.PointLight(0xffffff, 1);
-  pointLight.position.set(0, 0, 2);
+  pointLight.position.set(0, 5, 0);
   scene.add(pointLight);
 
   if (!modelUrl) {
@@ -25,7 +24,8 @@ const createScene = async (camera, modelUrl) => {
   const loader = new window.THREE.GLTFLoader();
   return new Promise((resolve) => {
     loader.load(modelUrl, (object) => {
-      object.scene.position.set(0, 0, 0);
+      object.scene.position.set(0, 0.35, 0);
+      object.scene.scale.set(1.5, 1.5, 1.5);
       object.scene.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
 
       scene.add(object.scene);
@@ -107,8 +107,8 @@ const ARView = ({ model }) => {
     });
 
     new window.THREEx.ArMarkerControls(arToolkitContext, camera.current, {
-      type : 'pattern',
-      patternUrl : window.THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro',
+      type: 'pattern',
+      patternUrl: window.THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro',
       changeMatrixMode: 'cameraTransformMatrix'
     });
 
@@ -128,7 +128,7 @@ const ARView = ({ model }) => {
 
   return (
     <div ref={nodeElement => nodeElement && rendererElement && nodeElement.appendChild(rendererElement)}>
-      <DebugLine enabled right />
+      <Debug enabled right line />
     </div>
   );
 };
