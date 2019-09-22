@@ -54,6 +54,9 @@ const Running = ({ channelName }) => {
             <div className={styles.codeHeader}>Room Code:</div>
             <Input className={styles.upperInput} value={channelName} readOnly />
           </Menu.Item>
+          <Menu.Item position='right'>
+            <div className={styles.codeHeader}>Number of connections: {pusherEvents.length}</div>
+          </Menu.Item>
         </Container>
       </Menu>
 
