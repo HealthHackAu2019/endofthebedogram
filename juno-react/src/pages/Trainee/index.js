@@ -38,7 +38,7 @@ const Trainee = () => {
       <div>
         <NavBar hideStartTraining />
         <Grid textAlign='center' style={{ height: '100vh', 'background-color': '#1b1c1d' }} verticalAlign='middle'>
-          <Grid.Column style={{ maxWidth: '80vw' }}>
+          <Grid.Column style={{ maxWidth: '80vw', width: '500px' }}>
             <Header as='h2' style={{ color: 'white' }} textAlign='center'>
               Please enter your session code:
             </Header>
