@@ -4,11 +4,13 @@ import {
   Header,
   Segment,
   Image,
+  Button,
 } from "semantic-ui-react";
 import styles from "./styles.module.scss";
 import HomepageHeading from "./HomepageHeading";
 import NavBar from "../../components/NavBar";
 import baby from "../../img/baby.jpg";
+
 
 function Home() {
   return (
@@ -34,8 +36,8 @@ function Home() {
                 Disrupting the Endofthebedogram
               </Header>
               <p className={styles.details}>
-              Juno is an animated full body simulated baby, with varying skin tones.
-              augmented reality overlay of the manikin with a number of presentations and skin types.
+              Juno is an animated full body augmented reality overlay of the manikin
+              with a number of presentations and skin types.
               </p>
             </Grid.Column>
             <Grid.Column floated='right' width={8}>
@@ -44,7 +46,35 @@ function Home() {
           </Grid.Row>
         </Grid>
       </Segment>
-
+      <Segment className={styles.topPadding} vertical>
+        <Grid container stackable verticalAlign='middle'>
+          <Grid.Row>
+            <Grid.Column floated='left' width={8}>
+              <Image src='https://jeromeetienne.github.io/AR.js/data/images/HIRO.jpg' rounded />
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Header as='h3' className={styles.header}>
+                How to use Juno
+              </Header>
+              <p className={styles.details}>
+                Our augmented reality system uses a marker to position the simulated baby
+                in the real world.
+              </p>
+              <p>
+                <a href="https://jeromeetienne.github.io/AR.js/data/images/HIRO.jpg" download>
+                  <Button size='large'>	
+                    Download Marker	
+                  </Button>
+                </a>
+              </p>
+              <p className={styles.details}>
+              Once a trainee joins a session, by pointing their phone at the
+              marker they will be able to see the simulated baby.
+              </p>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Segment>
 
 
     </div>
