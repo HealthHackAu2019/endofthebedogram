@@ -13,9 +13,9 @@ import ObjectRenderer from '../../components/ObjectRenderer';
 import {EventTypes, publishEvent, usePusherSubscription} from "../../util/pusher";
 
 const models = {
-  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby040.glTF.glb': 'Model 1',
-  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby012.glb?a=1': 'Model 2',
-  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby012.glb': 'Model 3',
+  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby040.glTF.glb': 'Normal',
+  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/face-attempt-001.glTF.glb': 'Chainsaw Massacre',
+  'https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby012.glb': 'Plain',
 };
 
 const textures = {
