@@ -2,15 +2,7 @@
 
 import React, {useEffect, useRef, useState} from "react";
 import withWaitForCondition from "../WaitForCondition/withWaitForCondition";
-
-const getRandomColor = () => {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
+import DebugLine from "../DebugLine";
 
 const buildCubeMesh = (size) => {
   const geometry = new window.THREE.CubeGeometry(size, size, size);
@@ -133,7 +125,7 @@ const ARView = ({ meshType, debug }: { meshType: 'cube1' | 'cube2', debug: boole
 
   return (
     <div ref={nodeElement => nodeElement && rendererElement && nodeElement.appendChild(rendererElement)}>
-      { debug && <div style={{ width: '50px', height: '100vh', backgroundColor: `${getRandomColor()}77` }} /> }
+      <DebugLine enabled={debug} right />
     </div>
   );
 };
@@ -164,7 +156,5 @@ const ARViewChanger = () => {
     <ARViewWithWait meshType={meshType} debug={true} />
   )
 };
-
-
 
 export default ARViewChanger;

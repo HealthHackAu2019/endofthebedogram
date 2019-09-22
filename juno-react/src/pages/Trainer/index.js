@@ -9,8 +9,8 @@ import {
   Header,
 } from "semantic-ui-react";
 import Pusher from 'pusher-js';
-import axios from 'axios';
 import styles from './styles.module.css';
+import {EventTypes, publishEvent} from "../../util/pusher";
 
 const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
   cluster: process.env.REACT_APP_PUSHER_CLUSTER,
@@ -32,25 +32,31 @@ const textures = {
 const modelKeys = Object.keys(models);
 const textureKeys = Object.keys(textures);
 
-const publish = ({ channelName, model, texture }) => {
-  axios.post(`${process.env.REACT_APP_API_URL}/publish`, {
-    channel: channelName,
-    event: 'trainer-event',
-    message: JSON.stringify({
-      model,
-      texture,
-    }),
+const publish = ({ channelName, model, texture }) =>
+  publishEvent(channelName, EventTypes.TRAINER, {
+    model,
+    texture,
   });
+
+const generateCode = (length) => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let text = "";
+
+  for (let i = 0; i < length; i++) {
+    text += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return text;
 };
 
 const Trainer = () => {
   const [connected, setConnected] = useState(false);
-  const [channelName, setChannelName] = useState(Math.random().toString(36).substring(7));
+  const [channelName, setChannelName] = useState(generateCode(5));
   const [model, setModel] = useState('');
   const [texture, setTexture] = useState('');
 
   // Update channel name
-  const handleUpdateChannelName = useCallback(e => setChannelName(e.target.value), []);
+  const handleUpdateChannelName = useCallback(e => setChannelName(e.target.value.toUpperCase()), []);
   useEffect(() => {
     if (!channelName) return;
     publish({ channelName, model, texture });
@@ -59,7 +65,7 @@ const Trainer = () => {
   // Start the training session
   const handleStartSession = useCallback(() => (async () => {
     pusher.subscribe(channelName);
-    pusher.bind('trainee-event', () => {
+    pusher.bind(EventTypes.TRAINEE, () => {
       publish({ channelName, model, texture });
     });
     setConnected(true);
@@ -74,7 +80,7 @@ const Trainer = () => {
       >
         <Container>
           <Menu.Item as='div' className="ui input">
-            <Input value={channelName} readOnly={connected} onChange={handleUpdateChannelName} />
+            <Input className={styles.upperInput} value={channelName} readOnly onChange={handleUpdateChannelName} />
           </Menu.Item>
           <Menu.Item as='div'>
             <Button as="div" primary disabled={connected} onClick={handleStartSession}>Start training session</Button>

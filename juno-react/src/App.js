@@ -22,7 +22,6 @@ const App = () => (
     <Route path={Paths.ABOUT} exact component={About} />
     <Route path={Paths.TRAINER} exact component={Trainer} />
     <Route path={Paths.TRAINEE} exact component={Trainee} />
-    <Route path="/ar" exact component={ARView} />
     <Route path="/baby/" component={Baby} />
   </Router>
 );

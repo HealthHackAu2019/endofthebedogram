@@ -5,19 +5,13 @@ import {
   Menu,
   Input,
 } from "semantic-ui-react";
-import Pusher from 'pusher-js';
-import axios from 'axios';
-
-const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
-  cluster: process.env.REACT_APP_PUSHER_CLUSTER,
-  forceTLS: true,
-});
+import FullView from "./FullView";
+import styles from "./styles.module.css";
 
 const Trainee = () => {
-  const [connected, setConnected] = useState(false);
-  const [channelName, setChannelName] = useState();
-  const [trainerEvents, setTrainerEvents] = useState([]);
-  const handleUpdateChannelName = useCallback(e => setChannelName(e.target.value), []);
+  const [isSubmitted, setSubmitted] = useState(false);
+  const [channelName, setChannelName] = useState("");
+  const handleUpdateChannelName = useCallback(e => setChannelName(e.target.value.toUpperCase()), []);
 
   // Start the training session
   const handleJoinSession = useCallback(() => (async () => {
@@ -26,48 +20,37 @@ const Trainee = () => {
       return;
     }
 
-    await axios.post(`${process.env.REACT_APP_API_URL}/publish`, {
-      channel: channelName,
-      event: 'trainee-event',
-      message: JSON.stringify({
-        action: 'joined',
-      }),
-    });
+    if (isSubmitted) {
+      return;
+    }
 
-    pusher.subscribe(channelName);
-    pusher.bind('trainer-event', (data) => {
-      setTrainerEvents([...trainerEvents, data]);
-    });
-    setConnected(true);
-  })(), [channelName, trainerEvents]);
+    setSubmitted(true);
+  })(), [channelName, isSubmitted]);
 
-  return (
-    <div>
-      <Menu
-        fixed="top"
-        size='large'
-        inverted
-      >
-        <Container>
-          <Menu.Item as='div' className="ui input">
-            <Input value={channelName} readOnly={connected} onChange={handleUpdateChannelName} />
-          </Menu.Item>
-          <Menu.Item as='div'>
-            <Button as="div" primary disabled={connected} onClick={handleJoinSession}>Join training session</Button>
-          </Menu.Item>
-        </Container>
-      </Menu>
-      <p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        {JSON.stringify(trainerEvents)}
-      </p>
-    </div>
-  );
+  if (isSubmitted) {
+    return (
+      <FullView channel={channelName} />
+    )
+  } else {
+    return (
+      <div>
+        <Menu
+          fixed="top"
+          size='large'
+          inverted
+        >
+          <Container>
+            <Menu.Item as='div' className="ui input">
+              <Input value={channelName} onChange={handleUpdateChannelName} className={styles.upperInput} />
+            </Menu.Item>
+            <Menu.Item as='div'>
+              <Button as="div" primary onClick={handleJoinSession}>Join training session</Button>
+            </Menu.Item>
+          </Container>
+        </Menu>
+      </div>
+    );
+  }
 };
 
 export default Trainee;
