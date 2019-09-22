@@ -6,10 +6,8 @@ import { EventTypes, publishEvent, usePusherSubscription } from "../../util/push
 const connectedCallback = (channel) => () => publishEvent(channel, EventTypes.TRAINEE, { action: 'joined' });
 
 const FullView = ({ channel }) => {
-  // const [connectionStatus, pusherEvents] = usePusherSubscription(channel, EventTypes.TRAINER, connectedCallback(channel));
-  // const latestEvent = pusherEvents[pusherEvents.length - 1];
-  const connectionStatus = "TESTING";
-  const latestEvent = {TESTING: 1, model: "https://s3-ap-southeast-2.amazonaws.com/www.junohealth.com/models/baby040.glTF.glb"};
+  const [connectionStatus, pusherEvents] = usePusherSubscription(channel, EventTypes.TRAINER, connectedCallback(channel));
+  const latestEvent = pusherEvents[pusherEvents.length - 1];
 
   return (
     <Fragment>

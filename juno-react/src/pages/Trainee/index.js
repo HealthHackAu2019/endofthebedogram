@@ -29,7 +29,7 @@ const Trainee = () => {
     setSubmitted(true);
   })(), [channelName, isSubmitted]);
 
-  if (isSubmitted || true) {
+  if (isSubmitted) {
     return (
       <FullView channel={channelName} />
     )
