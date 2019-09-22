@@ -6,7 +6,6 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Trainer from "./pages/Trainer";
 import Trainee from "./pages/Trainee";
-import ARView from "./components/ARView";
 import Baby from "./pages/Baby";
 
 export const Paths = {
